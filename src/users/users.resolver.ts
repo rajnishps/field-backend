@@ -50,8 +50,39 @@ export class UsersResolver {
     );
   }
 
-  @ResolveField('posts')
-  posts(@Parent() author: User) {
-    return this.prisma.user.findUnique({ where: { id: author.id } }).posts();
+   @ResolveField('order')
+  order(@Parent() author: User) {
+    return this.prisma.user.findUnique({ where: { id: author.id } }).order();
   }
+
+  // @ResolveField('customer')
+  // customer(@Parent() author: User) {
+  //   return this.prisma.user.findUnique({ where: { id: author.id } }).customer();
+  // }
+
+  // @ResolveField('product_sample')
+  // product_sample(@Parent() author: User) {
+  //   return this.prisma.user.findUnique({ where: { id: author.id } }).product_sample();
+  // }
+
+  // @ResolveField('attendance')
+  // attendance(@Parent() author: User) {
+  //   return this.prisma.user.findUnique({ where: { id: author.id } }).attendance();
+  // }
+
+  // @ResolveField('location_history')
+  // location_history(@Parent() author: User) {
+  //   return this.prisma.user.findUnique({ where: { id: author.id } }).location_history();
+  // }
+
+
+
+
+
+
+
+  // @ResolveField('posts')
+  // posts(@Parent() author: User) {
+  //   return this.prisma.user.findUnique({ where: { id: author.id } }).posts();
+  // }
 }

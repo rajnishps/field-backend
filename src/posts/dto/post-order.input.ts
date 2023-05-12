@@ -6,8 +6,11 @@ export enum PostOrderField {
   createdAt = 'createdAt',
   updatedAt = 'updatedAt',
   published = 'published',
-  title = 'title',
-  content = 'content',
+  name = 'name',
+  product = 'product',
+  quantity = 'quantity',
+  delivery_date = 'delivery_date',
+  delivery_location = 'delivery_location',
 }
 
 registerEnumType(PostOrderField, {

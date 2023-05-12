@@ -17,8 +17,11 @@ input ChangePasswordInput {
 }
 
 input CreatePostInput {
-  content: String!
-  title: String!
+  delivery_date: String!
+  delivery_location: String!
+  name: String!
+  product: String!
+  quantity: String!
 }
 
 """
@@ -38,11 +41,34 @@ input LoginInput {
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
-  createPost(data: CreatePostInput!): Post!
+  createPost(data: CreatePostInput!): Order!
   login(data: LoginInput!): Auth!
   refreshToken(token: JWT!): Token!
   signup(data: SignupInput!): Auth!
   updateUser(data: UpdateUserInput!): User!
+}
+
+type Order {
+  author: User
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  delivery_date: String!
+  delivery_location: String!
+  id: ID!
+  name: String!
+  product: String
+  published: Boolean!
+  quantity: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type OrderConnection {
+  edges: [OrderEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 """
@@ -53,36 +79,16 @@ enum OrderDirection {
   desc
 }
 
+type OrderEdge {
+  cursor: String!
+  node: Order!
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
-}
-
-type Post {
-  author: User
-  content: String
-
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
-  id: ID!
-  published: Boolean!
-  title: String!
-
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
-}
-
-type PostConnection {
-  edges: [PostEdge!]
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PostEdge {
-  cursor: String!
-  node: Post!
 }
 
 input PostOrder {
@@ -92,11 +98,14 @@ input PostOrder {
 
 """Properties by which post connections can be ordered."""
 enum PostOrderField {
-  content
   createdAt
+  delivery_date
+  delivery_location
   id
+  name
+  product
   published
-  title
+  quantity
   updatedAt
 }
 
@@ -104,9 +113,9 @@ type Query {
   hello(name: String!): String!
   helloWorld: String!
   me: User!
-  post(postId: String!): Post!
-  publishedPosts(after: String, before: String, first: Int, last: Int, orderBy: PostOrder, query: String, skip: Int): PostConnection!
-  userPosts(userId: String!): [Post!]!
+  post(postId: String!): Order!
+  publishedPosts(after: String, before: String, first: Int, last: Int, orderBy: PostOrder, query: String, skip: Int): OrderConnection!
+  userPosts(userId: String!): Order!
 }
 
 """User role"""
@@ -123,7 +132,7 @@ input SignupInput {
 }
 
 type Subscription {
-  postCreated: Post!
+  postCreated: Order!
 }
 
 type Token {
@@ -146,7 +155,7 @@ type User {
   firstname: String
   id: ID!
   lastname: String
-  posts: [Post!]
+  order: Order
   role: Role!
 
   """Identifies the date and time when the object was last updated."""

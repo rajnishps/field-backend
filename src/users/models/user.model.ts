@@ -6,11 +6,13 @@ import {
   Field,
 } from '@nestjs/graphql';
 import { IsEmail } from 'class-validator';
-import { Post } from 'src/posts/models/post.model';
+import { Order } from 'src/posts/models/post.model';
+// import { Customer } from 'src/customers/models/customer.model'
 import { BaseModel } from 'src/common/models/base.model';
 import { Role } from '@prisma/client';
+// import { Order } from 'src/common/order/order';
 
-registerEnumType(Role, {
+registerEnumType(Role,{
   name: 'Role',
   description: 'User role',
 });
@@ -30,8 +32,23 @@ export class User extends BaseModel {
   @Field(() => Role)
   role: Role;
 
-  @Field(() => [Post], { nullable: true })
-  posts?: [Post] | null;
+  // @Field(() => [Post], { nullable: true })
+  // posts?: [Post] | null;
+
+  @Field(() => Order , { nullable: true } )
+  order?: Order;
+
+  // @Field(() => Customer , { nullable: true })
+  // customer?: Customer;
+
+  // @Field(() => Product , { nullable: true })
+  // product_sample?: Product;
+
+  // @Field(() => Attendance , { nullable: true })
+  // attendance?: Attendance;
+
+  // @Field(() => Location_History , { nullable: true })
+  // location_history?: Location_History;
 
   @HideField()
   password: string;

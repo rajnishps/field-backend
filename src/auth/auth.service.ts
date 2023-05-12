@@ -24,6 +24,8 @@ export class AuthService {
   ) {}
 
   async createUser(payload: SignupInput): Promise<Token> {
+    
+
     const hashedPassword = await this.passwordService.hashPassword(
       payload.password
     );
@@ -33,7 +35,7 @@ export class AuthService {
         data: {
           ...payload,
           password: hashedPassword,
-          role: 'USER',
+          role: 'ADMIN',
         },
       });
 

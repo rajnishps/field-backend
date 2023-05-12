@@ -5,9 +5,21 @@ import { InputType, Field } from '@nestjs/graphql';
 export class CreatePostInput {
   @Field()
   @IsNotEmpty()
-  content: string;
+  name: string;
 
   @Field()
   @IsNotEmpty()
-  title: string;
+  product: string;
+
+  @Field()
+  @IsNotEmpty()
+  quantity: string;
+
+  @Field()
+  @IsNotEmpty()
+  delivery_date: string;
+
+  @Field()
+  @IsNotEmpty()
+  delivery_location: string;
 }

@@ -17,41 +17,45 @@ import { User } from 'src/users/models/user.model';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { PostIdArgs } from './args/post-id.args';
 import { UserIdArgs } from './args/user-id.args';
-import { Post } from './models/post.model';
-import { PostConnection } from './models/post-connection.model';
+import { Order } from './models/post.model';
+import { OrderConnection } from './models/post-connection.model';
 import { PostOrder } from './dto/post-order.input';
 import { CreatePostInput } from './dto/createPost.input';
+// import { Order } from 'src/common/order/order';
 
 const pubSub = new PubSub();
 
-@Resolver(() => Post)
+@Resolver(() => Order)
 export class PostsResolver {
   constructor(private prisma: PrismaService) {}
 
-  @Subscription(() => Post)
+  @Subscription(() => Order)
   postCreated() {
-    return pubSub.asyncIterator('postCreated');
+    return pubSub.asyncIterator('orderCreated');
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => Post)
+  @Mutation(() => Order)
   async createPost(
     @UserEntity() user: User,
     @Args('data') data: CreatePostInput
   ) {
-    const newPost = this.prisma.post.create({
+    const newPost = this.prisma.order.create({
       data: {
         published: true,
-        title: data.title,
-        content: data.content,
+        name: data.name,
+        product: data.product,
+        quantity: data.quantity,
+        delivery_date: data.delivery_date,
+        delivery_location: data.delivery_location,
         authorId: user.id,
       },
     });
-    pubSub.publish('postCreated', { postCreated: newPost });
+    pubSub.publish('orderCreated', { orderCreated: newPost });
     return newPost;
   }
 
-  @Query(() => PostConnection)
+  @Query(() => OrderConnection)
   async publishedPosts(
     @Args() { after, before, first, last }: PaginationArgs,
     @Args({ name: 'query', type: () => String, nullable: true })
@@ -65,20 +69,20 @@ export class PostsResolver {
   ) {
     const a = await findManyCursorConnection(
       (args) =>
-        this.prisma.post.findMany({
+        this.prisma.order.findMany({
           include: { author: true },
           where: {
             published: true,
-            title: { contains: query || '' },
+            name: { contains: query || '' },
           },
           orderBy: orderBy ? { [orderBy.field]: orderBy.direction } : undefined,
           ...args,
         }),
       () =>
-        this.prisma.post.count({
+        this.prisma.order.count({
           where: {
             published: true,
-            title: { contains: query || '' },
+            name: { contains: query || '' },
           },
         }),
       { first, last, before, after }
@@ -86,11 +90,11 @@ export class PostsResolver {
     return a;
   }
 
-  @Query(() => [Post])
+  @Query(() => Order)
   userPosts(@Args() id: UserIdArgs) {
     return this.prisma.user
       .findUnique({ where: { id: id.userId } })
-      .posts({ where: { published: true } });
+      // .order({ where: { published: true } });
 
     // or
     // return this.prisma.posts.findMany({
@@ -101,13 +105,13 @@ export class PostsResolver {
     // });
   }
 
-  @Query(() => Post)
+  @Query(() => Order)
   async post(@Args() id: PostIdArgs) {
-    return this.prisma.post.findUnique({ where: { id: id.postId } });
+    return this.prisma.order.findUnique({ where: { id: id.postId } });
   }
 
   @ResolveField('author', () => User)
-  async author(@Parent() post: Post) {
-    return this.prisma.post.findUnique({ where: { id: post.id } }).author();
+  async author(@Parent() post: Order) {
+    return this.prisma.order.findUnique({ where: { id: post.id } }).author();
   }
 }

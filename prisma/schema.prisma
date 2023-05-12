@@ -13,29 +13,88 @@ generator dbml {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  password  String
-  firstname String?
-  lastname  String?
-  posts     Post[]
-  role      Role
+  id               String            @id @default(cuid())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  email            String            @unique
+  password         String
+  firstname        String?
+  lastname         String?
+  // employe_id       String?
+  order            Order[]
+  customer         Customer?
+  product_sample   Product?
+  role             Role
+  attendance       Attendance?
+  location_history Location_History?
 }
 
-model Post {
+model Order {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  author            User?    @relation(fields: [authorId], references: [id])
+  authorId          String?  @unique
+  published         Boolean
+  name              String
+  product           String
+  quantity          String
+  delivery_date     String
+  delivery_location String
+}
+
+model Customer {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  author        User?    @relation(fields: [authorId], references: [id])
+  authorId      String?  @unique
+  published     Boolean
+  name          String
+  address       String
+  mobile_number String
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  author       User?    @relation(fields: [authorId], references: [id])
+  authorId     String?  @unique
+  product_name String
+  price        String
+  quantity     String
+  weight       String
+  date         String
+  // discount     String?
+  vendor_name  String
+}
+
+model Attendance {
+  id         String                @id @default(cuid())
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+  author     User?                 @relation(fields: [authorId], references: [id])
+  authorId   String?               @unique
+  attendance Employee_Attendance[]
+}
+
+model Location_History {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  published Boolean
-  title     String
-  content   String?
   author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?
+  authorId  String?  @unique
+  photo     String?
+  location  String?
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+enum Employee_Attendance {
+  PARSENT
+  ABSENT
 }

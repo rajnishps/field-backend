@@ -3,12 +3,21 @@ import { User } from 'src/users/models/user.model';
 import { BaseModel } from 'src/common/models/base.model';
 
 @ObjectType()
-export class Post extends BaseModel {
+export class Order extends BaseModel {
   @Field()
-  title: string;
+  name: string;
 
   @Field(() => String, { nullable: true })
-  content?: string | null;
+  product?: string | null;
+
+   @Field()
+  quantity: string;
+
+   @Field()
+  delivery_date: string;
+
+  @Field()
+  delivery_location: string;
 
   @Field(() => Boolean)
   published: boolean;

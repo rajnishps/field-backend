@@ -10,19 +10,71 @@ Table User {
   password String [not null]
   firstname String
   lastname String
-  posts Post [not null]
+  order Order [not null]
+  customer Customer
+  product_sample Product
   role Role [not null]
+  attendance Attendance
+  location_history Location_History
 }
 
-Table Post {
+Table Order {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  published Boolean [not null]
-  title String [not null]
-  content String
   author User
-  authorId String
+  authorId String [unique]
+  published Boolean [not null]
+  name String [not null]
+  product String [not null]
+  quantity String [not null]
+  delivery_date String [not null]
+  delivery_location String [not null]
+}
+
+Table Customer {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  author User
+  authorId String [unique]
+  published Boolean [not null]
+  name String [not null]
+  address String [not null]
+  mobile_number String [not null]
+}
+
+Table Product {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  author User
+  authorId String [unique]
+  product_name String [not null]
+  price String [not null]
+  quantity String [not null]
+  weight String [not null]
+  date String [not null]
+  vendor_name String [not null]
+}
+
+Table Attendance {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  author User
+  authorId String [unique]
+  attendance Employee_Attendance[] [not null]
+}
+
+Table Location_History {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  author User
+  authorId String [unique]
+  photo String
+  location String
 }
 
 Enum Role {
@@ -30,4 +82,17 @@ Enum Role {
   USER
 }
 
-Ref: Post.authorId > User.id
+Enum Employee_Attendance {
+  PARSENT
+  ABSENT
+}
+
+Ref: Order.authorId > User.id
+
+Ref: Customer.authorId - User.id
+
+Ref: Product.authorId - User.id
+
+Ref: Attendance.authorId - User.id
+
+Ref: Location_History.authorId - User.id
