@@ -20,7 +20,7 @@ import { UserIdArgs } from './args/user-id.args';
 import { Order } from './models/post.model';
 import { OrderConnection } from './models/post-connection.model';
 import { PostOrder } from './dto/post-order.input';
-import { CreatePostInput } from './dto/createPost.input';
+import { CreateOrderInput } from './dto/createPost.input';
 // import { Order } from 'src/common/order/order';
 
 const pubSub = new PubSub();
@@ -38,7 +38,7 @@ export class PostsResolver {
   @Mutation(() => Order)
   async createPost(
     @UserEntity() user: User,
-    @Args('data') data: CreatePostInput
+    @Args('data') data: CreateOrderInput
   ) {
     const newPost = this.prisma.order.create({
       data: {
@@ -94,7 +94,7 @@ export class PostsResolver {
   userPosts(@Args() id: UserIdArgs) {
     return this.prisma.user
       .findUnique({ where: { id: id.userId } })
-      // .order({ where: { published: true } });
+      .order({ where: { published: true } });
 
     // or
     // return this.prisma.posts.findMany({

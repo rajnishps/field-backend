@@ -20,7 +20,6 @@ model User {
   password         String
   firstname        String?
   lastname         String?
-  // employe_id       String?
   order            Order[]
   customer         Customer?
   product_sample   Product?

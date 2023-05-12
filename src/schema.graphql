@@ -16,7 +16,7 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
-input CreatePostInput {
+input CreateOrderInput {
   delivery_date: String!
   delivery_location: String!
   name: String!
@@ -41,7 +41,7 @@ input LoginInput {
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
-  createPost(data: CreatePostInput!): Order!
+  createPost(data: CreateOrderInput!): Order!
   login(data: LoginInput!): Auth!
   refreshToken(token: JWT!): Token!
   signup(data: SignupInput!): Auth!
